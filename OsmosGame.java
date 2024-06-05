@@ -6,8 +6,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import javax.sound.sampled.*;
+import java.util.Collections;
+
 
 public class OsmosGame {
     private DrawArea drawArea;
@@ -83,14 +86,41 @@ public class OsmosGame {
                     balls.add(mainBall.sub(directionX, directionY, 0.01, 3));
                 }
 
-            });
+            });/*
+            this.addKeyListener(new KeyAdapter() {
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    moveBallsTimer.setDelay(25);
+
+                    if(e.getKeyCode()==KeyEvent.VK_SPACE){
+                        moveBallsTimer.stop();
+                        moveBallsTimer.setDelay(25);
+                        moveBallsTimer.start();
+                        checkCollisionsTimer.setDelay(15);
+
+                    }
+                    
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    if(e.getKeyCode()==KeyEvent.VK_SPACE){
+                        moveBallsTimer.setDelay(50);
+                        checkCollisionsTimer.setDelay(30);
+
+                    }
+                }
+
+            });*/
         }
 
         private void drawBall(int x, int y, double area, Graphics2D g2d, Color color) {
             g2d.setColor(color);
             int R = (int) Math.sqrt(area / Math.PI);
             g2d.fillOval(x - R, y - R, R * 2, R * 2);
-            
+            g2d.setColor(Color.WHITE);
+            g2d.drawOval(x - R, y - R, R * 2, R * 2);
         }
 
         public void moveBalls() {
@@ -193,7 +223,7 @@ public class OsmosGame {
                 JOptionPane.showMessageDialog(null,"Game Over");
                 GameType=-1;
             }
-            else if(mainBall.getArea()>=TotalArea()){
+            else if(mainBall.getArea()>=TotalArea()*0.9){
                 moveBallsTimer.stop();
                 checkCollisionsTimer.stop();
                 chackGameWinOrOver.stop();
@@ -209,24 +239,35 @@ public class OsmosGame {
             return total;
         }
 
+        Comparator<Ball> areaSort =new Comparator<Ball>(){
+            @Override
+            public int compare(Ball ball1,Ball ball2){
+                return Double.compare(ball1.getArea(),ball2.getArea());
+            }
+        };
+        
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
 
+            Collections.sort(balls,areaSort);
+
             for (Ball ball : balls) {
                 if(ball==null)System.out.println("error");
                 Color color = Color.CYAN;
-                if (ball.getArea() >= mainBall.getArea())
+                if(ball==mainBall)
+                    color = Color.BLUE;
+                else if (ball.getArea() >= mainBall.getArea())
                     color = Color.RED;
                 else
                     color = Color.GREEN;
                 drawBall((int) ball.getX(), (int) ball.getY(), ball.getArea(), g2d, color);
-                if(ball.getEnergyX()!=0|| ball.getEnergyY()!=0)
-                g.drawLine((int)ball.getX(), (int)ball.getY(), (int)(ball.getX()+ball.getEnergyX()), (int)(ball.getY()+ball.getEnergyY()));
+                /*if(ball.getEnergyX()!=0|| ball.getEnergyY()!=0)
+                g.drawLine((int)ball.getX(), (int)ball.getY(), (int)(ball.getX()+ball.getEnergyX()), (int)(ball.getY()+ball.getEnergyY()));*/
             }
-            drawBall((int) mainBall.getX(), (int) mainBall.getY(), mainBall.getArea(), g2d, Color.BLUE);
+            
         }
     }
 
@@ -248,6 +289,8 @@ class Ball {
         this.energyX = energyX;
         this.energyY = energyY;
     }
+
+    
 
     public Ball sub(double toX, double toY, double percent, double speed) {
         double magnitude = Math.sqrt(toX * toX + toY * toY);
