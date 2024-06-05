@@ -27,7 +27,6 @@ public class OsmosMain extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("key");
         if(e.getKeyCode()==69&&os!=null)
             os.moveDelay=10;
     }
