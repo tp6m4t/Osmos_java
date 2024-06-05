@@ -8,15 +8,16 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
-import javax.sound.sampled.*;
 import java.util.Collections;
 
 
 public class OsmosGame {
     private DrawArea drawArea;
-    private Timer moveBallsTimer, checkCollisionsTimer,chackGameWinOrOver;
+    private Timer moveBallsTimer, checkCollisionsTimer,chackGameWinOrOver,setTimerTime;
     private int pressX, pressY;
-    public int GameType;
+    public int GameType,moveDelay=50;
+
+    
 
     /*public static JPanel main(String saveFileName){
         OsmosGame OG=new OsmosGame("save/"+saveFileName);
@@ -33,9 +34,11 @@ public class OsmosGame {
         moveBallsTimer = new Timer(50, e -> drawArea.moveBalls());
         checkCollisionsTimer = new Timer(30, e -> drawArea.checkCollisions());
         chackGameWinOrOver=new Timer(1000,e -> drawArea.chackGameWinOrOver());
+        setTimerTime=new Timer(1000,e->{moveBallsTimer.setDelay(moveDelay);});
         checkCollisionsTimer.start();
         moveBallsTimer.start();
         chackGameWinOrOver.start();
+        setTimerTime.start();
         openfile(fileName);
     }
 
@@ -68,6 +71,8 @@ public class OsmosGame {
         private Ball mainBall = new Ball(1000, ballX, ballY, 0, 0);
 
         public DrawArea() {
+            this.setFocusable(true);
+            this.requestFocusInWindow();
             this.setBackground(Color.BLACK);
             balls = new ArrayList<>();
 
@@ -86,33 +91,8 @@ public class OsmosGame {
                     balls.add(mainBall.sub(directionX, directionY, 0.01, 3));
                 }
 
-            });/*
-            this.addKeyListener(new KeyAdapter() {
-
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    moveBallsTimer.setDelay(25);
-
-                    if(e.getKeyCode()==KeyEvent.VK_SPACE){
-                        moveBallsTimer.stop();
-                        moveBallsTimer.setDelay(25);
-                        moveBallsTimer.start();
-                        checkCollisionsTimer.setDelay(15);
-
-                    }
-                    
-                }
-
-                @Override
-                public void keyReleased(KeyEvent e) {
-                    if(e.getKeyCode()==KeyEvent.VK_SPACE){
-                        moveBallsTimer.setDelay(50);
-                        checkCollisionsTimer.setDelay(30);
-
-                    }
-                }
-
-            });*/
+            });
+            
         }
 
         private void drawBall(int x, int y, double area, Graphics2D g2d, Color color) {

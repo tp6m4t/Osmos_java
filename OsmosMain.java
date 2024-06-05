@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,16 +17,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.sound.sampled.*;
 
 
-public class OsmosMain extends JFrame {
+public class OsmosMain extends JFrame implements KeyListener {
     private OsmosGame os;
     private Timer OnGameOver;
     private JScrollPane scrollPane;
     private Map<String,Integer> GameTypes;
 
-
+    @Override
+    public void keyPressed(KeyEvent e) {
+        System.out.println("key");
+        if(e.getKeyCode()==69&&os!=null)
+            os.moveDelay=10;
+    }
+    
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if(e.getKeyCode()==69&&os!=null)
+            os.moveDelay=50;
+    }
+    @Override
+    public void keyTyped(KeyEvent e) {}
     
 
 
@@ -35,6 +48,9 @@ public class OsmosMain extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
+        this.addKeyListener(this);
+        this.setFocusable(true);
+        this.requestFocusInWindow();
 
         List<String> fileNames = getOsmFiles();
         GameTypes= new HashMap<>();
