@@ -12,6 +12,7 @@ public class OsmosGame {
     private DrawArea drawArea;
     private Timer moveBallsTimer, checkCollisionsTimer,chackGameWinOrOver;
     private int pressX, pressY;
+    public int GameType;
 
     /*public static JPanel main(String saveFileName){
         OsmosGame OG=new OsmosGame("save/"+saveFileName);
@@ -24,7 +25,7 @@ public class OsmosGame {
 
     public OsmosGame(String fileName) {
         drawArea = new DrawArea();
-
+        GameType=0;
         moveBallsTimer = new Timer(50, e -> drawArea.moveBalls());
         checkCollisionsTimer = new Timer(30, e -> drawArea.checkCollisions());
         chackGameWinOrOver=new Timer(1000,e -> drawArea.chackGameWinOrOver());
@@ -189,12 +190,14 @@ public class OsmosGame {
                 checkCollisionsTimer.stop();
                 chackGameWinOrOver.stop();
                 JOptionPane.showMessageDialog(null,"Game Over");
+                GameType=-1;
             }
             else if(mainBall.getArea()>=TotalArea()){
                 moveBallsTimer.stop();
                 checkCollisionsTimer.stop();
                 chackGameWinOrOver.stop();
                 JOptionPane.showMessageDialog(null,"Winner");
+                GameType=1;
             }
         }
 
