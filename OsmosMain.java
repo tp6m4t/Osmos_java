@@ -1,3 +1,7 @@
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import javax.sound.sampled.*;
 
 
 public class OsmosMain extends JFrame {
@@ -112,6 +116,7 @@ public class OsmosMain extends JFrame {
             getContentPane().add(gameDrawArea);
             revalidate();
             repaint();
+            playSound("music.wav",0.0f);
         }
     }
 
@@ -152,7 +157,22 @@ public class OsmosMain extends JFrame {
         }
     }
 
+     private void playSound(String soundFileName, float volume) {
+        try {
+            File soundFile = new File(soundFileName);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
 
+            
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-30.0f); 
+
+            clip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             OsmosMain viewer = new OsmosMain();

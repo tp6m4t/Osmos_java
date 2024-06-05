@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.sound.sampled.*;
 
 public class OsmosGame {
     private DrawArea drawArea;
